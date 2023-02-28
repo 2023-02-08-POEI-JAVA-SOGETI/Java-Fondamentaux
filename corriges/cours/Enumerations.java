@@ -18,14 +18,14 @@ enum JourSemaine {
     // Attribut
     private final String abrege;
     
-    // Constructeur
+    // Constructeur permettant d'attribué l'abrevation
     private JourSemaine(String abrege) {
         this.abrege = abrege;
     }
     
     // methode
     public String abrevation() {
-        return abrege;
+        return this.abrege;
     }
 }
 
