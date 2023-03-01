@@ -1,4 +1,4 @@
-package cours_exercices.cours;
+package corriges.cours;
 
 import java.sql.*;
 import javax.sql.rowset.JdbcRowSet;
