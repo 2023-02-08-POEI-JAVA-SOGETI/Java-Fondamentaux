@@ -143,7 +143,7 @@ public class Dao {
             System.out.println(e);            
             return false;
         }
-    }    
+    }
     
     public static boolean modifier(Object objet) {
         String nomTable = nomTable(objet.getClass());
@@ -173,9 +173,10 @@ public class Dao {
                 Field champs = champsObjet[i];
                 Object valeurChamps = champs.get(objet);
                 
-                if (valeurChamps instanceof Integer integer) ps.setInt(i + 1, integer);
-                if (valeurChamps instanceof String string) ps.setString(i + 1, string);
-                if (valeurChamps instanceof Boolean bool) ps.setBoolean(i + 1, bool);
+                // if (valeurChamps instanceof Integer integer) ps.setInt(i + 1, integer);
+                // if (valeurChamps instanceof String string) ps.setString(i + 1, string);
+                // if (valeurChamps instanceof Boolean bool) ps.setBoolean(i + 1, bool);
+                ps.setObject(i + 1, valeurChamps);
             }
             
             Field idChamp = classeObjet.getDeclaredField("id");
@@ -250,33 +251,41 @@ public class Dao {
         return messageErreur;
     } 
     
+    private static StringBuilder testEmail(String email, StringBuilder messageErreur) {
+        if (!email.contains(".")) messageErreur.append("L'email doit contenir un . sur la partie droite de l'@.\n");
+        if (!email.contains("@")) messageErreur.append("L'email doit contenir un @.\n");
+        return messageErreur;
+    }    
+
+    private static <C> StringBuilder testNumeroExistant(Class<C> classBean, Integer id, Integer numero, StringBuilder messageErreur) {
+        if (Dao.chercheNumeroExistant(classBean, id, numero) != null) messageErreur.append("Le numéro existe déjà.\n");
+        return messageErreur;
+    }
+
     public static <T> String validations(T bean) {
         StringBuilder messageErreur = new StringBuilder(Dao.testVide(bean));
         
         if (bean instanceof Article article) {
             if (!"F".equals(article.getFc().toUpperCase()) && !"C".equals(article.getFc().toUpperCase())) messageErreur.append("Le champ FC doit être F ou C.\n");
-            if (Dao.chercheNumeroExistant(Article.class, article.getId(), article.getNumero()) != null)   messageErreur.append("Le numéro existe déjà.\n");
+            messageErreur = testNumeroExistant(bean.getClass(), article.getId(), article.getNumero(), messageErreur);
         }
-
+        
         if (bean instanceof Client client) {
-            if (!client.getEmail().contains(".")) messageErreur.append("L'email doit contenir un . sur la partie droite de l'@.\n");
-            if (!client.getEmail().contains("@")) messageErreur.append("L'email doit contenir un @.\n");
-            if (Dao.chercheNumeroExistant(Client.class, client.getId(), client.getNumero()) != null) messageErreur.append("Le numéro existe déjà.\n");
+            messageErreur = testEmail(client.getEmail(), messageErreur);
+            messageErreur = testNumeroExistant(bean.getClass(), client.getId(), client.getNumero(), messageErreur);
         }
-
+        
         if (bean instanceof Fournisseur fournisseur) {
-            if (!fournisseur.getEmail().contains(".")) messageErreur.append("L'email doit contenir un . sur la partie droite de l'@.\n");
-            if (!fournisseur.getEmail().contains("@")) messageErreur.append("L'email doit contenir un @.\n");
-            if (Dao.chercheNumeroExistant(Fournisseur.class, fournisseur.getId(), fournisseur.getNumero()) != null) messageErreur.append("Le numéro existe déjà.\n");
+            messageErreur = testEmail(fournisseur.getEmail(), messageErreur);
+            messageErreur = testNumeroExistant(bean.getClass(), fournisseur.getId(), fournisseur.getNumero(), messageErreur);
         }
-
+        
         if (bean instanceof Utilisateur utilisateur) {
-            if (!utilisateur.getEmail().contains(".")) messageErreur.append("L'email doit contenir un . sur la partie droite de l'@.\n");
-            if (!utilisateur.getEmail().contains("@")) messageErreur.append("L'email doit contenir un @.\n");
-            if (utilisateur.getMdp().length() < 8)     messageErreur.append("Le mot de passe doit comporter au moins 8 caractères.\n");
-            if (Dao.chercheNumeroExistant(Utilisateur.class, utilisateur.getId(), utilisateur.getNumero()) != null) messageErreur.append("Le numéro existe déjà.\n");
+            messageErreur = testEmail(utilisateur.getEmail(), messageErreur);
+            messageErreur = testNumeroExistant(bean.getClass(), utilisateur.getId(), utilisateur.getNumero(), messageErreur);
+            if (utilisateur.getMdp().length() < 8) messageErreur.append("Le mot de passe doit comporter au moins 8 caractères.\n");
         }
-
+        
         return messageErreur.toString();
     }    
     

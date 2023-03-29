@@ -93,7 +93,7 @@ public class MenuPrincipal {
     
     /**
      * Programme principal
-     * @param args : arguments eventuels pass�s en ligne de commande
+     * @param args : arguments eventuels passes en ligne de commande
      */
     public static void main(String[] args) {
         if (Creation.base()) menuPrincipal();

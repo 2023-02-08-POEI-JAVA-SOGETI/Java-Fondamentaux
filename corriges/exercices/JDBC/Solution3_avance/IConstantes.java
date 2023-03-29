@@ -12,7 +12,7 @@ public interface IConstantes {
     static final String NOM_TABLE_U = "Utilisateurs";
     static final String ID = "id";
     static final String NUMERO = "numero";
-
+    
     // requetes des creations des tables
     static final String RCU = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_U + " ("
         + "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "

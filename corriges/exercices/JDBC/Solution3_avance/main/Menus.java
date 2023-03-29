@@ -119,7 +119,7 @@ public class Menus<T> {
 
         if (original == null) System.out.println("L'id " + id + " à modifier n'existe pas."); 
         else {
-            bean = saisieAvecBean(original);  // saisieBeanAvecSource(original);
+            bean = saisieAvecBean(original);
             String erreur = Dao.validations(bean);
 
             if (!erreur.isEmpty()) System.out.println(erreur);
@@ -137,7 +137,7 @@ public class Menus<T> {
     }
     
     private static <C> void creationBean(Class<C> classeBean) {
-        C bean = saisieSansBean(classeBean); //saisieBeanSimple(classeBean);
+        C bean = saisieSansBean(classeBean);
         String erreur = Dao.validations(bean);
         
         if (!erreur.isEmpty()) System.out.println(erreur);
